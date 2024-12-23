@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../../environment';
 import { IAddPatientToSessionRequest, ISession, IUser } from '../../../../viewmodels/viewmodels';
@@ -16,7 +16,11 @@ export class PatientService {
   constructor() { }
 
   getAllPsychologists() {
-    return this._http.get<IUser[]>(environment.apiUrl + '/users/all').pipe(
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+  
+    return this._http.get<IUser[]>(environment.apiUrl + 'users/all', { headers }).pipe(
       map((users: IUser[]) => {
         const psychologistRole = this._authService.getAllSystemRoles().find(
           r => r.name === UserRole.Psychologist

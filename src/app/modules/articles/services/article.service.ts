@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 import {
   IArticle,
   IPsychologistArticleMap,
@@ -30,9 +31,19 @@ export class ArticleService {
   }
 
   getAllArticles() {
+    // Retrieve the token (e.g., from localStorage or a service)
+    const token = localStorage.getItem('authToken'); // Ensure this is how you're storing the token
+  
+    // Create headers with the Authorization token
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    // Pass headers as part of the request
     return this._http
       .get<IPsychologistArticleMap[]>(
-        environment.apiUrl + 'articles/all'
+        environment.apiUrl + 'articles/all',
+        { headers }
       )
       .pipe(
         tap((result) => {
