@@ -12,7 +12,6 @@ import { UserRole } from '../../../../viewmodels/enums';
 export class PatientService {
   private _http = inject(HttpClient);
   private _authService = inject(AuthService);
-  
   constructor() { }
 
   getAllPsychologists() {
@@ -31,24 +30,36 @@ export class PatientService {
   }
 
   getSessionsForPsychologist(psychologistId: string) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
     return this._http.get<ISession[]>(environment.apiUrl + 
-      'sessions/getAllAvailableSessions/' + psychologistId);
+      'sessions/getAllAvailableSessions/' + psychologistId, {headers});
   }
 
   addPatientToSession(request: IAddPatientToSessionRequest) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
     return this._http.post(environment.apiUrl + 
       'sessions/addPatient',
-      request
+      request, {headers}
     );
   }
 
   checkIfPatientHasChosenPsychologist(patientId: string) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
     return this._http.get<boolean>(environment.apiUrl +
-      'patients/checkIfPatientHasChosenPsychologist/' + patientId
+      'patients/checkIfPatientHasChosenPsychologist/' + patientId, {headers}
     );
   }
 
   tryCreateGoogleCalendarEvent(userEmail: string, day: string, time: string) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
     const params = new HttpParams()
       .set('psychologistEmail', userEmail)
       .set('day', day)

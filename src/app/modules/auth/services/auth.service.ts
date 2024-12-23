@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { IRegisterPatientRequest, IRole, ITokenUser } from '../../../viewmodels/viewmodels';
 import { BehaviorSubject, Observable, Subject, map, of, switchMap, tap } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environment';
 import { LoginResponse, Role } from '../../../viewmodels/classes';
 import { jwtDecode } from 'jwt-decode';
@@ -23,7 +23,12 @@ export class AuthService {
     localStorage.setItem('access_token', token);
     this._accessToken$.next(token);
   }
-
+  get getHeader(){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    });
+    return headers;
+  }
   get accessToken$() {
     return this._accessToken$.asObservable();
   }
