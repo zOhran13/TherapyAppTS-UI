@@ -1,26 +1,51 @@
-<div class="w-full h-full overflow-auto bg-slate-300">
-  <div class="flex flex-col w-full h-full pl-[48px] pt-[36px]">
-    <div class="flex flex-row">
-      <h1 class="w-9/12 font-bold text-black text-4xl mb-10">
+<div class="w-full h-full overflow-auto bg-slate-100">
+  <div class="flex flex-col w-full h-full px-12 py-9">
+    <!-- Naslov stranice -->
+    <div class="flex flex-row justify-between items-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-800">
         Articles & Resources
       </h1>
+      <!-- Dugme za dodavanje članka, vidljivo samo za psihologa -->
       <button
         *ngIf="currentUserRole === 'Psychologist'"
         mat-flat-button
-        class="p-3 hover:bg-black hover:shadow-lg bg-grey-darker rounded-full shadow-lg text-base font-medium text-grey-lightest"
+        class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition ease-in-out duration-300"
         (click)="openNewArticleModal()"
       >
-        New Article
+        + New Article
       </button>
     </div>
 
-    <div class="grid gap-x-0 gap-y-10 grid-cols-3 mt-5 content-evenly">
+    <!-- Prikaz članaka za sve korisnike (Psiholog i Pacijent) -->
+    <div
+      *ngIf="allExpandedArticles?.length > 0; else noArticlesMessage"
+      class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    >
       <ng-container *ngFor="let expandedArticle of allExpandedArticles">
-        <app-article-card
-          class="w-[300px]"
-          [expandedArticle]="expandedArticle"
-        ></app-article-card>
+        <div
+          class="flex flex-col bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-300 ease-in-out"
+        >
+          <app-article-card
+            class="w-full"
+            [expandedArticle]="expandedArticle"
+          ></app-article-card>
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-500">
+              Author: <span class="text-gray-800">{{ expandedArticle.authorName }}</span>
+            </p>
+            <p class="text-sm font-medium text-gray-500 mt-1">
+              Title: <span class="text-gray-800">{{ expandedArticle.article.title }}</span>
+            </p>
+          </div>
+        </div>
       </ng-container>
     </div>
+
+    <!-- Poruka ako nema dostupnih članaka -->
+    <ng-template #noArticlesMessage>
+      <p class="text-center text-lg text-gray-600 mt-10">
+        No articles available at the moment.
+      </p>
+    </ng-template>
   </div>
 </div>

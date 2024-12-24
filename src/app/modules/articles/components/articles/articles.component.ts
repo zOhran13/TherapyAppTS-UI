@@ -1,3 +1,4 @@
+// Updated ArticlesComponent
 import { Component, OnInit } from '@angular/core';
 import {
   Article,
@@ -6,11 +7,9 @@ import {
 } from '../../../../viewmodels/classes';
 import { CommonModule } from '@angular/common';
 import { ArticleCardComponent } from '../article-card/article-card.component';
-import { Image, Text, Video } from '../../../../viewmodels/classes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ArticleModalComponent } from '../article-modal/article-modal.component';
-import { NgModule } from '@angular/core';
 import { ArticleService } from '../../services/article.service';
 import {
   IArticle,
@@ -33,7 +32,7 @@ import { UserRole } from '../../../../viewmodels/enums';
 })
 export class ArticlesComponent implements OnInit {
   allExpandedArticles: ExpandedArticle[] = [];
-  articlesAndPsychologist: IPsychologistArticleMap[];
+  articlesAndPsychologist: IPsychologistArticleMap[] = [];
   currentUserRole: UserRole;
 
   constructor(
@@ -46,29 +45,29 @@ export class ArticlesComponent implements OnInit {
     this._authService.role$().subscribe((role: UserRole) => {
       this.currentUserRole = role;
     });
-
-    this._articlesService.getAllArticles().subscribe();
-    this._articlesService.articles$.subscribe(
-      (articlesPsy: IPsychologistArticleMap[]) => {
-        this.articlesAndPsychologist = articlesPsy;
-        this.articlesAndPsychologist.forEach((psychologistArticles) => {
-          if (psychologistArticles.articles) {
-            let articlesWithPsychologistName =
-              psychologistArticles.articles.map((article) => {
-                return new ExpandedArticle({
-                  authorName: psychologistArticles.psychologistDetails.name,
-                  article: article,
-                });
-              });
-            this.allExpandedArticles.push(...articlesWithPsychologistName);
-          }
+  
+    this._articlesService.getAllArticles().subscribe(
+      (articles: IArticle[]) => {
+        console.log('Articles fetched:', articles); // Debug log
+    
+        // Kreiranje proširenih članaka bez tekstualnog sadržaja
+        this.allExpandedArticles = articles.map((article) => {
+          return new ExpandedArticle({
+            authorName: article.author || 'Unknown',
+            article: article, // Bez dodavanja `textContent`
+          });
         });
-        console.log('aaaa');
-        console.log(this.allExpandedArticles);
+    
+        console.log('Expanded articles:', this.allExpandedArticles); // Debug log
+      },
+      (error) => {
+        console.error('Error fetching articles:', error);
       }
     );
   }
-
+  
+  
+  
   openNewArticleModal() {
     this._dialog.open(ArticleModalComponent, {
       panelClass: 'article-modal-container',

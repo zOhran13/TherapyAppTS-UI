@@ -1,7 +1,9 @@
+// Updated ArticleService
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import {
   IArticle,
   IPsychologistArticleMap,
@@ -30,44 +32,80 @@ export class ArticleService {
     this.currentExpandedArticleSource.next(expandedArticle);
   }
 
-  getAllArticles() {
-    // Retrieve the token (e.g., from localStorage or a service)
-    const token = localStorage.getItem('authToken'); // Ensure this is how you're storing the token
+  /*getPsychologistDetails(psychologistID: string): Observable<any> {
+    const token = localStorage.getItem('authToken');
   
-    // Create headers with the Authorization token
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
   
-    // Pass headers as part of the request
     return this._http
-      .get<IPsychologistArticleMap[]>(
-        environment.apiUrl + 'articles/all',
-        { headers }
-      )
+      .get<any>(`${environment.apiUrl}users/${psychologistID}`, { headers })
       .pipe(
-        tap((result) => {
-          this._articles.next(result);
+        tap((details) => {
+          console.log('Fetched psychologist details:', details);
+        }),
+        catchError((error) => {
+          console.error('Error fetching psychologist details:', error);
+          return of(null); // Return null if there's an error
         })
       );
   }
+  */
+
+  getAllArticles() {
+    const token = localStorage.getItem('authToken');
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    return this._http
+      .get<IArticle[]>(environment.apiUrl + 'articles/all', { headers })
+      .pipe(
+        tap((result) => {
+          console.log('Fetched articles:', result); // Debug log
+        }),
+        catchError((error) => {
+          console.error('Error fetching articles:', error);
+          return of([]); // Sprečava rušenje aplikacije
+        })
+      );
+  }
+  
+  
 
   createArticle(article: IArticle) {
     return this._http
       .post(environment.apiUrl + 'articles/add', article)
-      .pipe(switchMap(() => this.getAllArticles()));
+      .pipe(
+        switchMap(() => this.getAllArticles()),
+        catchError((error) => {
+          console.error('Error creating article:', error);
+          return of(null);
+        })
+      );
   }
 
   deleteArticle(articleID: string) {
     return this._http
-      .delete(
-        `${environment.apiUrl}articles/remove/${articleID}`
-      )
-      .pipe(switchMap(() => this.getAllArticles()));
+      .delete(`${environment.apiUrl}articles/remove/${articleID}`)
+      .pipe(
+        switchMap(() => this.getAllArticles()),
+        catchError((error) => {
+          console.error('Error deleting article:', error);
+          return of(null);
+        })
+      );
   }
 
   updateArticle(articleID: string, updatedArticle: any) {
     const url = `${environment.apiUrl}articles/update/${articleID}`;
-    return this._http.put(url, updatedArticle);
+    return this._http.put(url, updatedArticle).pipe(
+      catchError((error) => {
+        console.error('Error updating article:', error);
+        return of(null);
+      })
+    );
   }
 }
