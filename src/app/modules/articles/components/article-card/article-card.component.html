@@ -1,5 +1,5 @@
 <mat-card class="w-[320px] h-[310px] rounded-lg shadow-lg">
-  <mat-card-header class="m-0 -ml-10 pl-0">
+  <mat-card-header class="m-0 -ml-10 pl-0" (click)="onViewClick()">
     <div mat-card-avatar class="example-header-image"></div>
     <mat-card-title class="text-lg">{{
       expandedArticle.article.title
@@ -14,11 +14,6 @@
     mat-card-image
     [src]="expandedArticle.article.image?.imageUrl"
     alt="Photo of a Shiba Inu"
+    (click)="onViewClick()"
   />
-
-  <mat-card-actions>
-    <button mat-button class="text-xs text-gray-400" (click)="onViewClick()">
-      View
-    </button>
-  </mat-card-actions>
 </mat-card>

@@ -22,22 +22,12 @@
       class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     >
       <ng-container *ngFor="let expandedArticle of allExpandedArticles">
-        <div
-          class="flex flex-col bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-300 ease-in-out"
-        >
+       
           <app-article-card
             class="w-full"
             [expandedArticle]="expandedArticle"
           ></app-article-card>
-          <div class="mt-4">
-            <p class="text-sm font-medium text-gray-500">
-              Author: <span class="text-gray-800">{{ expandedArticle.authorName }}</span>
-            </p>
-            <p class="text-sm font-medium text-gray-500 mt-1">
-              Title: <span class="text-gray-800">{{ expandedArticle.article.title }}</span>
-            </p>
-          </div>
-        </div>
+
       </ng-container>
     </div>
 

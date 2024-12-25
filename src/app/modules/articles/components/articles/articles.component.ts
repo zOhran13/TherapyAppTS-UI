@@ -48,7 +48,6 @@ export class ArticlesComponent implements OnInit {
   
     this._articlesService.getAllArticles().subscribe(
       (articles: IArticle[]) => {
-        console.log('Articles fetched:', articles); // Debug log
     
         // Kreiranje proširenih članaka bez tekstualnog sadržaja
         this.allExpandedArticles = articles.map((article) => {
