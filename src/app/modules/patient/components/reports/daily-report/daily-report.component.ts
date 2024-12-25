@@ -29,7 +29,7 @@ export class DailyReportComponent implements OnInit {
     'assets/emotions.png', 
     'https://st2.depositphotos.com/1008939/8477/i/450/depositphotos_84771180-stock-photo-different-moods.jpg',
     'https://cdn.stockmediaserver.com/smsimg35/pv/IsignstockContributors/ISS_28352_19298.jpg?token=LIRxsb630gtuEFMEGYjfFKOznBbg1MVFvyH7t0nOc20&class=pv&smss=53&expires=4102358400',
-    'https://www.beanbagsrus.com.au/media/amasty/blog/uploads/2023/04/different-room-colors.jpeg',
+    'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0',
     'https://study.com/cimages/multimages/16/450_worshipping-god-21013477852499734828091853.jpg'
   ];
 
@@ -132,9 +132,10 @@ export class DailyReportComponent implements OnInit {
         });
   
         // Navigacija do ReportsComponent s query parametrom patientId
-        this._router.navigate(['reports'], {
+        this._router.navigate(['/patient/reports'], {
           queryParams: { patientId: this.patientId },
         });
+        
       },
       (error) => {
         console.error('Error creating daily report:', error);
