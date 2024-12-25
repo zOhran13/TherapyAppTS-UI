@@ -22,6 +22,7 @@ import { StatusSnackbarComponent } from '../../../../common/components/status-sn
   styleUrl: './daily-report.component.scss'
 })
 export class DailyReportComponent implements OnInit {
+  patientId: string;
   questions: IQuestion[] = [];
   @ViewChild('sliderInput') sliderInput: ElementRef;
   coverImageUrls = [
@@ -30,7 +31,7 @@ export class DailyReportComponent implements OnInit {
     'https://cdn.stockmediaserver.com/smsimg35/pv/IsignstockContributors/ISS_28352_19298.jpg?token=LIRxsb630gtuEFMEGYjfFKOznBbg1MVFvyH7t0nOc20&class=pv&smss=53&expires=4102358400',
     'https://www.beanbagsrus.com.au/media/amasty/blog/uploads/2023/04/different-room-colors.jpeg',
     'https://study.com/cimages/multimages/16/450_worshipping-god-21013477852499734828091853.jpg'
-  ]
+  ];
 
   constructor(
     private reportService: ReportService,
@@ -38,13 +39,36 @@ export class DailyReportComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _matSnackbar: MatSnackBar
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.reportService.getDailyReportQuestions().subscribe((questions: IQuestion[]) => {
-      this.questions = questions;
-    });
+    const userId = this._authService.currentUserId;
+
+    // Dohvati Patient ID na osnovu User ID-a
+    this.reportService.getPatientByUserId(userId).subscribe(
+      (patient) => {
+        console.log('Fetched patient ID:', patient.id);
+        this.patientId = patient.id;
+
+        // Dohvati pitanja za formu
+        this.loadQuestions();
+      },
+      (error) => {
+        console.error('Error fetching patient by user ID:', error);
+      }
+    );
+  }
+
+  private loadQuestions(): void {
+    this.reportService.getDailyReportQuestions().subscribe(
+      (questions: IQuestion[]) => {
+        console.log('Fetched questions:', questions);
+        this.questions = questions;
+      },
+      (error) => {
+        console.error('Error fetching daily report questions:', error);
+      }
+    );
   }
 
   formatEmotionSlider(value: number): string {
@@ -55,7 +79,7 @@ export class DailyReportComponent implements OnInit {
       return value + '(happy)';
     }
     if (value >= 50 && value < 65) {
-      return value + '(neutral)'
+      return value + '(neutral)';
     }
     if (value >= 35 && value < 50) {
       return value + '(sad)';
@@ -86,34 +110,46 @@ export class DailyReportComponent implements OnInit {
   submitDailyReport() {
     const reportContent = this.buildReportContent();
     const report = new Report({
-      patientId: this._authService.currentUserId,
+      patientId: this.patientId, // Koristimo pravi Patient ID
       weeklyReportId: null,
       content: reportContent,
       createdAt: ''
     });
+  
+    console.log('Submitting report:', report);
+  
     this.reportService.createDailyReport(report).subscribe(
       () => {
+        console.log('Daily report created successfully.');
         this._matSnackbar.openFromComponent(StatusSnackbarComponent, {
           duration: 3000,
           data: {
-              success: true,
-              message: `Daily report created`,
+            success: true,
+            message: `Daily report created`,
           },
           verticalPosition: 'top',
           horizontalPosition: 'end',
         });
-        this._router.navigate(['../'], { relativeTo: this._route });
+  
+        // Navigacija do ReportsComponent s query parametrom patientId
+        this._router.navigate(['reports'], {
+          queryParams: { patientId: this.patientId },
+        });
+      },
+      (error) => {
+        console.error('Error creating daily report:', error);
       }
     );
   }
+  
 
   private buildReportContent(): string {
-    const sliderValue = parseInt(this.sliderInput.nativeElement.value)
+    const sliderValue = parseInt(this.sliderInput.nativeElement.value);
     let content = '';
-    this.questions.forEach(q => {
-      content+= `${q.question}\nAnswer: ${q.selectedAnswer}\n\n`
+    this.questions.forEach((q) => {
+      content += `${q.question}\nAnswer: ${q.selectedAnswer}\n\n`;
     });
-    content+= `\nOverall emotion score: ${this.formatEmotionSlider(sliderValue)}`;
+    content += `\nOverall emotion score: ${this.formatEmotionSlider(sliderValue)}`;
     return content;
   }
 }
