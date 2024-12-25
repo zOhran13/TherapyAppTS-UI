@@ -70,20 +70,46 @@ export class BreathControlComponent {
   startBreathControl() {
     this.breathingStarted = true;
 
-    let request = new CreateBreathControlLogRequest({
-      patientId: this._authService.currentUserId,
-      tempo: this.tempo
-    });
-    this._stressReliefService.createBreathControlLog(request)
-    .subscribe((breathControl: IBreathControl) => this.breathControl = breathControl);
+    // Dohvati ID pacijenta na osnovu trenutnog korisnika
+    const currentUserId = this._authService.currentUserId;
+    console.log('Current User ID:', currentUserId);
 
-    interval(1000).pipe(
-      takeUntil(this.timer$),
-      tap(() => this.timerValue--),
-      finalize(() => {
-        this.breatheIn();
-      })
-    ).subscribe(() => this.breathControlStartTime = new Date());
+    this._stressReliefService.getPatientByUserId(currentUserId).subscribe(
+      (patient) => {
+        console.log('Fetched patient:', patient);
+        const patientId = patient?.id; // Provjeri da li vraća `id`
+
+        if (!patientId) {
+          console.error('Patient ID is missing from the response!');
+          return;
+        }
+
+        console.log('Fetched patient ID:', patientId);
+
+        // Kreiraj zahtjev za bilježenje vježbe kontrole disanja
+        const request = new CreateBreathControlLogRequest({
+          patientId: patientId,
+          tempo: this.tempo
+        });
+
+        this._stressReliefService.createBreathControlLog(request).subscribe(
+          (breathControl: IBreathControl) => this.breathControl = breathControl,
+          (error) => console.error('Error creating breath control log:', error)
+        );
+
+        // Pokreni tajmer za kontrolu disanja
+        interval(1000).pipe(
+          takeUntil(this.timer$),
+          tap(() => this.timerValue--),
+          finalize(() => {
+            this.breatheIn();
+          })
+        ).subscribe(() => this.breathControlStartTime = new Date());
+      },
+      (error) => {
+        console.error('Error fetching patient by userId:', error);
+      }
+    );
   }
 
   breatheIn() {

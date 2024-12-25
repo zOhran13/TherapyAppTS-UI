@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../../environment';
 import { IBreathControl, ICreateBreathContolLogRequest, ICreateMeditationLogRequest, ICreateWalkLogRequest, IMeditation, IUpdateActionDurationTimeRequest, IWalk } from '../../../../viewmodels/viewmodels';
 import { GetStressReliefActionLogsResponse } from '../../../../viewmodels/classes';
-
+import { finalize, interval, takeUntil, tap, timer,catchError,throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,6 +27,20 @@ export class StressReliefService {
   createBreathControlLog(request: ICreateBreathContolLogRequest) {
     return this._http.post<IBreathControl>(environment.apiUrl + 'stressrelief/breathcontrol', request);
   }
+
+  getPatientByUserId(userId: string) {
+    console.log(`Fetching patient by userId: ${userId}`);
+    return this._http.get<any>(`${environment.apiUrl}patients/by-user-id?userId=${userId}`).pipe(
+      tap((response) => console.log('Response from getPatientByUserId:', response)),
+      catchError((error) => {
+        console.error('Error in getPatientByUserId:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
+
+  
 
   createWalkLog(request: ICreateWalkLogRequest) {
     return this._http.post<IWalk>(environment.apiUrl + 'stressrelief/walk', request);
