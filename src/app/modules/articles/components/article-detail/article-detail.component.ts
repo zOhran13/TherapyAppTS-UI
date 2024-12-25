@@ -40,7 +40,6 @@ export class ArticleDetailComponent implements OnInit {
     this._authService.role$().subscribe((role: UserRole) => {
       this.currentUserRole = role;
     });
-
     this.articleService.currentArticle$.subscribe((expandedArticle) => {
       this.expandedArticle = expandedArticle;
       if (this.expandedArticle.article?.text.content) {

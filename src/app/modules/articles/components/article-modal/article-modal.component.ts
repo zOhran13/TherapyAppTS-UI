@@ -67,7 +67,5 @@ export class ArticleModalComponent {
     this._articleService.createArticle(article).subscribe(() => {
       this.closeModal();
     });
-    console.log('clanak bi trebao biti dodan');
-    console.log(article);
   }
 }

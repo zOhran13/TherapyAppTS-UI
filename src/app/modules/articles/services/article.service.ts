@@ -59,7 +59,7 @@ export class ArticleService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-  
+    
     return this._http
       .get<IArticle[]>(environment.apiUrl + 'articles/all', { headers })
       .pipe(
@@ -72,14 +72,32 @@ export class ArticleService {
         })
       );
   }
+  getAllPsychologistsArticles(currentUserId) {
+    const token = localStorage.getItem('authToken');
   
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    
+    return this._http
+      .get<IArticle[]>(environment.apiUrl + 'articles/allPsychologists?id=' + currentUserId , { headers })
+      .pipe(
+        tap((result) => {
+          console.log('Fetched articles:', result); // Debug log
+        }),
+        catchError((error) => {
+          console.error('Error fetching articles:', error);
+          return of([]); // Sprečava rušenje aplikacije
+        })
+      );
+  }
   
 
   createArticle(article: IArticle) {
     return this._http
       .post(environment.apiUrl + 'articles/add', article)
       .pipe(
-        switchMap(() => this.getAllArticles()),
+        switchMap(() => this.getAllPsychologistsArticles(article.author)),
         catchError((error) => {
           console.error('Error creating article:', error);
           return of(null);

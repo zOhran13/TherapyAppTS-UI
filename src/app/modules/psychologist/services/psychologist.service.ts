@@ -28,7 +28,7 @@ export class PsychologistService {
     );
   }
   deleteSession(psychologistId: string, day: string, time: string): Observable<any> {
-    const url = `${environment.apiUrl}sessions/deleteSession/{psychologistId}/{day}/{time}?psychologistId=${this._authService.currentUserId}&day=${day}&time=${time}`;
+    const url = `${environment.apiUrl}sessions/deleteSession/${this._authService.currentUserId}/${day}/${time}`;
     return this._http.delete(url);
   }
   private filterReportsLast7Days(reports: IDailyReport[]): IDailyReport[] {

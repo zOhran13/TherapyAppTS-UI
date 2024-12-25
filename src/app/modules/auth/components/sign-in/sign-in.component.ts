@@ -53,7 +53,7 @@ export class SignInComponent {
             case UserRole.Psychologist: 
               return of(true)
             case UserRole.Patient:
-              return this._patientService.checkIfPatientHasChosenPsychologist(this._authService.currentUserId);
+              return of(true);
             default:
               return of(true);
         }}),
