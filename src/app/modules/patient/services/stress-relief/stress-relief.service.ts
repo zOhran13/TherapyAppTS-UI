@@ -29,7 +29,7 @@ export class StressReliefService {
   }
 
   getPatientByUserId(userId: string) {
-    console.log(`Fetching patient by userId: ${userId}`);
+    //console.log(`Fetching patient by userId: ${userId}`);
     return this._http.get<any>(`${environment.apiUrl}patients/by-user-id?userId=${userId}`).pipe(
       tap((response) => console.log('Response from getPatientByUserId:', response)),
       catchError((error) => {

@@ -79,7 +79,7 @@ export class EditArticleModalComponent {
         this.closeModal();
         this.router.navigate(['/articles']);
       });
-    console.log('editovan clanak');
+   // console.log('editovan clanak');
     console.log(editedArticle);
   }
 }

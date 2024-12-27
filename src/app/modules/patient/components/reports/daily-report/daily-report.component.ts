@@ -47,7 +47,7 @@ export class DailyReportComponent implements OnInit {
     // Dohvati Patient ID na osnovu User ID-a
     this.reportService.getPatientByUserId(userId).subscribe(
       (patient) => {
-        console.log('Fetched patient ID:', patient.id);
+       // console.log('Fetched patient ID:', patient.id);
         this.patientId = patient.id;
 
         // Dohvati pitanja za formu
@@ -62,7 +62,7 @@ export class DailyReportComponent implements OnInit {
   private loadQuestions(): void {
     this.reportService.getDailyReportQuestions().subscribe(
       (questions: IQuestion[]) => {
-        console.log('Fetched questions:', questions);
+       // console.log('Fetched questions:', questions);
         this.questions = questions;
       },
       (error) => {

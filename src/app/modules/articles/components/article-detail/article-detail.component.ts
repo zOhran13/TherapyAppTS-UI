@@ -63,7 +63,7 @@ export class ArticleDetailComponent implements OnInit {
       .subscribe(() => {
         this.router.navigate(['/articles']);
       });
-    console.log(this.expandedArticle?.article.id);
+    //console.log(this.expandedArticle?.article.id);
   }
 
   openEditArticleModal() {

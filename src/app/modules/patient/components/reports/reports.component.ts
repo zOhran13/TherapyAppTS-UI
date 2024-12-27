@@ -53,7 +53,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       (reports: IReport[]) => {
         this.reports = reports;
         this.dataSource.data = reports;
-        console.log('Fetched daily reports:', reports);
+       // console.log('Fetched daily reports:', reports);
 
         if (
           !this.reports.some((r) => {
@@ -79,7 +79,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     const userId = this._authService.currentUserId; // Dohvati userId
     this._reportService.getPatientByUserId(userId).subscribe(
       (patient) => {
-        console.log('Fetched patient ID in ReportsComponent:', patient.id);
+        //console.log('Fetched patient ID in ReportsComponent:', patient.id);
         this.loadDailyReports(patient.id);
       },
       (error) => {

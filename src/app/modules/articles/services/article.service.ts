@@ -64,10 +64,10 @@ export class ArticleService {
       .get<IArticle[]>(environment.apiUrl + 'articles/all', { headers })
       .pipe(
         tap((result) => {
-          console.log('Fetched articles:', result); // Debug log
+         // console.log('Fetched articles:', result); // Debug log
         }),
         catchError((error) => {
-          console.error('Error fetching articles:', error);
+          //console.error('Error fetching articles:', error);
           return of([]); // Sprečava rušenje aplikacije
         })
       );
@@ -83,7 +83,7 @@ export class ArticleService {
       .get<IArticle[]>(environment.apiUrl + 'articles/allPsychologists?id=' + currentUserId , { headers })
       .pipe(
         tap((result) => {
-          console.log('Fetched articles:', result); // Debug log
+         // console.log('Fetched articles:', result); // Debug log
         }),
         catchError((error) => {
           console.error('Error fetching articles:', error);

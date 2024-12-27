@@ -50,7 +50,7 @@ export class ArticlesComponent implements OnInit {
     this._authService.role$().subscribe((role: UserRole) => {
       this.currentUserRole = role;
     });
-    console.log(this.currentUserRole);
+    //console.log(this.currentUserRole);
     if (this.currentUserRole == "Psychologist"){
       this._articlesService.getAllPsychologistsArticles(this._authService.currentUserId).subscribe(
         (articles: IArticle[]) => {
@@ -63,10 +63,10 @@ export class ArticlesComponent implements OnInit {
             });
           });
       
-          console.log('Expanded articles:', this.allExpandedArticles); // Debug log
+          //console.log('Expanded articles:', this.allExpandedArticles); // Debug log
         },
         (error) => {
-          console.error('Error fetching articles:', error);
+          //console.error('Error fetching articles:', error);
         }
       );
     }
@@ -82,10 +82,10 @@ export class ArticlesComponent implements OnInit {
             });
           });
       
-          console.log('Expanded articles:', this.allExpandedArticles); // Debug log
+          //console.log('Expanded articles:', this.allExpandedArticles); // Debug log
         },
         (error) => {
-          console.error('Error fetching articles:', error);
+          //console.error('Error fetching articles:', error);
         }
       );
     }

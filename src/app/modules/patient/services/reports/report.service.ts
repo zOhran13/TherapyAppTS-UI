@@ -41,7 +41,7 @@ export class ReportService {
   
 
   getDailyReportsForPatient(patientId: string) {
-    console.log('Calling getDailyReportsForPatient with patientId:', patientId); // Log za patientId
+    //console.log('Calling getDailyReportsForPatient with patientId:', patientId); // Log za patientId
   
     const params = new HttpParams().set('patientId', patientId);
     return this._http.get<IReport[]>(environment.apiUrl + 'daily-reports', { params: params }).pipe(

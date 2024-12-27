@@ -66,7 +66,7 @@ export class PatientListComponent {
         patientId: patient.userId
       }
     });
-    console.log(this.sessionService.checkIfPatientHasWeeklyReportForThisWeek(this.patients[0].userId));
+    //console.log(this.sessionService.checkIfPatientHasWeeklyReportForThisWeek(this.patients[0].userId));
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Weekly report saved:', result);
@@ -87,9 +87,9 @@ export class PatientListComponent {
       width: '400px',
       data: { psychologistId, day, time }
     });
-    console.log(psychologistId);
-    console.log(day);
-    console.log(time);
+    //console.log(psychologistId);
+   // console.log(day);
+    //console.log(time);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.ngOnInit();
